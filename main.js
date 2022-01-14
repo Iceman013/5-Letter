@@ -1,26 +1,36 @@
 var iWord = words.length;
 var size = 5;
-var aInitial = "abcdefghijklmnopqrstuvwxyz";
+var guesses = [];
+var reqs = "";
+var alphabet = "abcdefghijklmnopqrstuvwxyz";
+var i = 0;
+while (i < size) {
+    guesses[i] = new letter();
+    i = i + 1;
+}
 function start() {
-    var values = score(aInitial, "among");
-    var a = 0;
+    addInput();
+}
+function getGuess() {
+    var values = score();
     var mo = 0;
+    var a = 0;
     while (a < values.length) {
         if (values[a] > values[mo]) {
             mo = a;
         }
         a = a + 1;
     }
-    console.log(words[mo]);
+    displayRec(words[mo]);
 }
-function score(alphabet, word) {
-    var list = filter(alphabet, word);
+function score() {
+    var list = filter();
     var scores = [];
     var a = 0;
     var b = 0;
     while (a < iWord) {
         scores[a] = 0;
-        if (meets(alphabet, word, words[a])) {
+        if (meets(words[a])) {
             b = 0;
             while (b < size) {
                 scores[a] = scores[a] + list[b][alphabet.indexOf(words[a].substring(b, b + 1))];
@@ -31,18 +41,18 @@ function score(alphabet, word) {
     }
     return scores;
 }
-function filter(alphabet, word) {
+function filter() {
     var letters = [[],[],[],[],[]];
     var a = 0;
     var b = 0;
     var c = 0;
-    while (a < letters.length) {
+    while (a < size) {
         b = 0;
         while (b < alphabet.length) {
             letters[a][b] = 0;
             c = 0;
             while (c < iWord) {
-                if (meets(alphabet, word, words[c])) {
+                if (meets(words[c])) {
                     if (words[c].substring(a, a + 1) == alphabet.substring(b, b + 1)) {
                         letters[a][b] = letters[a][b] + 1;
                     }
@@ -56,18 +66,19 @@ function filter(alphabet, word) {
     }
     return letters;
 }
-function meets(alphabet, word, guess) {
+function meets(guess) {
     var out = true;
     var a = 0;
-    while (a < guess.length) {
-        if (word.substring(a, a + 1) == "-") {
-            if (!alphabet.includes(guess.substring(a, a + 1))) {
-                out = false;
-            }
-        } else {
-            if (word.substring(a, a + 1) != guess.substring(a, a + 1)) {
-                out = false;
-            }
+    while (a < size) {
+        if (!guesses[a].includes(guess.substring(a, a + 1))) {
+            out = false;
+        }
+        a = a + 1;
+    }
+    a = 0;
+    while (a < reqs.length) {
+        if (!guess.includes(reqs.substring(a, a + 1))) {
+            out = false;
         }
         a = a + 1;
     }
