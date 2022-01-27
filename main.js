@@ -7,6 +7,53 @@ if (false) {
 var main = new word(5);
 function start() {
     addInput();
+    //tryout();
+}
+function tryout() {
+    var list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    var a = 0;
+    while (a < corrects.length) {
+        words = corrects;
+        main = new word(5);
+        var t = find(words[a]);
+        list[t - 1] = list[t - 1] + 1;
+        console.log(list);
+        a = a + 1;
+    }
+}
+function find(input) {
+    var a = 0;
+    var t = "";
+    while (t != input) {
+        var w = findGuess();
+        var b = 0;
+        while (b < main.length) {
+            if (w.substring(b, b + 1) == input.substring(b, b + 1)) {
+                main.confirm(b, w.substring(b, b + 1));
+            } else if (input.indexOf(w.substring(b, b + 1)) == -1) {
+                main.remove(w.substring(b, b + 1));
+            } else {
+                main.yellow(b, w.substring(b, b + 1));
+            }
+            b = b + 1;
+        }
+        a = a + 1;
+        t = w;
+    }
+    console.log(input + ": " + a.toString());
+    return a;
+}
+function findGuess() {
+    var mo = 0;
+    var a = 0;
+    values = common();
+    while (a < values.length) {
+        if (values[a] < values[mo]) {
+            mo = a;
+        }
+        a = a + 1;
+    }
+    return words[mo];
 }
 function getGuess() {
     var values = [];
@@ -27,8 +74,8 @@ function getGuess() {
         }
         a = a + 1;
     }
-    console.log(ties);
-    console.log(values[mo]);
+    //console.log(ties);
+    //console.log(values[mo]);
     document.getElementById("r").value = words.length;
     if (words.length > 0) {
         displayRec(words[mo]);
